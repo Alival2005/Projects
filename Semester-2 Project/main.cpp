@@ -8,7 +8,6 @@ using namespace std;
 // Displays all available commands (called on startup and when help is typed)
 void showHelp()
 {
-    cout << "\n-----EMERGENCY DISPATCH SYSTEM------" << endl;
     cout << "  add_responder ambulance <id> <name> <crew_count>" << endl;
     cout << "  add_responder police    <id> <name> <unit>"       << endl;
     cout << "  add_responder firetruck <id> <name> <water_L>"    << endl;

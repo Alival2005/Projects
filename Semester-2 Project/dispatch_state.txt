@@ -1,0 +1,3 @@
+RESPONDER,Ambulance,100,Rescue-1,1,4
+EMERGENCY,1,medical,high,resolved
+NEXT_ID,2
