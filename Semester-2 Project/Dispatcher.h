@@ -15,13 +15,13 @@
 
 class Dispatcher
 {
-    // --- AGGREGATION: Dispatcher manages these but doesn't create them itself ---
+    // AGGREGATION: Dispatcher manages these but doesn't create them itself
     vector<Responder*> responders;   // all units in the system (Ambulance/Police/FireTruck)
     vector<Emergency>  emergencies;  // all emergencies ever reported
 
     int nextEmergencyId;             // auto-increments so every emergency gets a unique ID
 
-    //COMPOSITION: Dispatcher owns these,they are created and destroyed with it 
+    // COMPOSITION: Dispatcher owns these,they are created and destroyed with it 
     Logger      logger;                          // activity log (composition)
     FileHandler fileHandler;                     // file save/load helper (composition)
     // Private helper: converts "high"/"medium"/"low" to a number
