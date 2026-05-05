@@ -1,120 +1,184 @@
+// Text-command based interface 
+// Every command does a specific action; no numbered menus.
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "Dispatcher.h"
 using namespace std;
-
-// unction to keep the loop clean
-void displayMenu() 
+// Displays all available commands (called on startup and when help is typed)
+void showHelp()
 {
-    cout << "\n=== EMERGENCY DISPATCH MENU ===" << endl;
-    cout << " Commands available:" << endl;
-    cout << "  > 1. Add Responder" << endl;
-    cout << "  > 2. Report Emergency" << endl;
-    cout << "  > 3. Dispatch" << endl;
-    cout << "  > 4. Show" << endl;
-    cout << "  > 5. Exit" << endl;
-    cout << "-------------------------------" << endl;
-    cout << "Enter command: ";
+    cout << "\n-----EMERGENCY DISPATCH SYSTEM------" << endl;
+    cout << "  add_responder ambulance <id> <name> <crew_count>" << endl;
+    cout << "  add_responder police    <id> <name> <unit>"       << endl;
+    cout << "  add_responder firetruck <id> <name> <water_L>"    << endl;
+    cout << "  report   <type> <priority>   (type: medical/crime/fire)" << endl;
+    cout << "  dispatch                     (sends units to pending emergencies)" << endl;
+    cout << "  resolve  <emergency_id>      (marks a job done, frees the unit)" << endl;
+    cout << "  show                         (display full system status)" << endl;
+    cout << "  stats                        (quick summary numbers)" << endl;
+    cout << "  log                          (full activity history)" << endl;
+    cout << "  save                         (save state to file)" << endl;
+    cout << "  load                         (load state from file)" << endl;
+    cout << "  help                         (show this list)" << endl;
+    cout << "  exit                         (shut down)" << endl;
+    cout << "-----------------------------------\n" << endl;
 }
 
-int main() 
+int main()
 {
     Dispatcher system;
-    int command;
 
-    cout << "Dispatch Center Online.\n";
-
-    // Create the infinite loop
-    while (true) 
+    cout << "-------------------------------------------" << endl;
+    cout << "   EMERGENCY RESPONSE DISPATCH SYSTEM     " << endl;
+    cout << "-------------------------------------------" << endl;
+    showHelp();
+    string line;
+    // Main loop — runs until the user types "exit"
+    while (true)
     {
-        displayMenu();
-        cin >> command;
+        cout << ">> ";
+        getline(cin, line);
 
-        // ADDING RESPONDER COMMAND
-        if (command == 1) 
+        if (line.empty()) continue;
+
+        // Split input into command + arguments
+        stringstream ss(line);
+        string cmd;
+        ss >> cmd;
+        // add_responder adds ambulance, police, or firetruck
+        if (cmd == "add_responder")
         {
-            string name;
-            int id, type;
-            
-            cout << "\n > 1. Ambulance \n > 2. Police \n > 3. FireTruck \nEnter type: " << endl;
-            cin >> type;
-            cout << "Enter ID (number): ";
-            cin >> id;
-            cout << "Enter Name (no spaces, e.g., Rescue-1): ";
-            cin >> name;
+            string type, name;
+            int id;
+            ss >> type >> id >> name;
 
-            // Route to the correct child class constructor based on user input
-            if (type == 1) 
+            if (name.empty())
+            {
+                cout << "Usage: add_responder <type> <id> <name> [extra]" << endl;
+                continue;
+            }
+
+            if (type == "ambulance")
             {
                 int crew;
-                cout << "Enter crew count: ";
-                cin >> crew;
+                if (!(ss >> crew))
+                {
+                    cout << "Usage: add_responder ambulance <id> <name> <crew_count>" << endl;
+                    continue;
+                }
                 system.addResponder(new Ambulance(id, name, crew));
-            } 
-            else if (type == 2) 
+            }
+            else if (type == "police")
             {
                 string unit;
-                cout << "Enter unit name (e.g., Unit-7): ";
-                cin >> unit;
+                if (!(ss >> unit))
+                {
+                    cout << "Usage: add_responder police <id> <name> <unit>" << endl;
+                    continue;
+                }
                 system.addResponder(new PoliceCar(id, name, unit));
-            } 
-            else if (type == 3) 
+            }
+            else if (type == "firetruck")
             {
                 int capacity;
-                cout << "Enter water capacity in L: ";
-                cin >> capacity;
+                if (!(ss >> capacity))
+                {
+                    cout << "Usage: add_responder firetruck <id> <name> <water_L>" << endl;
+                    continue;
+                }
                 system.addResponder(new FireTruck(id, name, capacity));
-            } 
-            else 
-            {
-                cout << "Invalid responder type! Must select from 1 - 3." << endl;
             }
-        } 
-        
-        // REPORTING EMERGENCY COMMAND
-        else if (command == 2) 
+            else
+            {
+                cout << "Unknown type: \"" << type << "\". Use: ambulance | police | firetruck" << endl;
+            }
+        }
+        // report  logs a new emergency as pending
+        else if (cmd == "report")
         {
             string type, priority;
-            
-            cout << "Enter emergency type (medical / crime / fire): ";
-            cin >> type;
-            
-            // Quick validation to ensure they type the exact strings Day 2 expects
-            if (type != "medical" && type != "crime" && type != "fire") 
+            ss >> type >> priority;
+
+            if (type.empty() || priority.empty())
             {
-                cout << "Invalid emergency type! Must be medical, crime, or fire." << endl;
-                continue; // Skips the rest of the loop and asks for a new command
+                cout << "Usage: report <type> <priority>" << endl;
+                continue;
+            }
+           // Validate type
+            if (type != "medical" && type != "crime" && type != "fire")
+            {
+                cout << "Invalid type: \"" << type << "\". Use: medical | crime | fire" << endl;
+                continue;
+            }
+           // Validate priority
+            if (priority != "high" && priority != "medium" && priority != "low")
+            {
+                cout << "Invalid priority: \"" << priority << "\". Use: high | medium | low" << endl;
+                continue;
             }
 
-            cout << "Enter priority (high / medium / low): ";
-            cin >> priority;
-            
             system.reportEmergency(type, priority);
-        } 
-        
-        // DISPATCHING COMMAND
-        else if (command == 3) 
+        }
+        // dispatch: sends available units to pending jobs
+        // Handles high priority emergencies first
+        else if (cmd == "dispatch")
         {
             system.dispatch();
-        } 
-        
-        // SHOWING COMMAND
-        else if (command == 4) 
+        }
+        // resolve <id>: marks a job done, frees the unit
+        else if (cmd == "resolve")
+        {
+            int emergencyId;
+            if (!(ss >> emergencyId))
+            {
+                cout << "Usage: resolve <emergency_id>" << endl;
+                continue;
+            }
+            system.resolveEmergency(emergencyId);
+        }
+        // show display all responders and emergencies
+        else if (cmd == "show")
         {
             system.showAll();
-        } 
-        
-        // EXITING COMMAND
-        else if (command == 5) 
+        }
+        // stats prints a quick summary of system numbers
+        else if (cmd == "stats")
         {
-            cout << "Shutting down dispatch system." << endl;
-            break; // This breaks out of the while(true) loop and ends the program
-        } 
-        
-        // HANDLING INVALID COMMANDS
-        else 
+            system.showStats();
+        }
+        // log prints the full activity history
+        else if (cmd == "log")
         {
-            cout << "Invalid command. Please choose exactly as shown in the menu." << endl;
+            system.showLog();
+        }
+        // save persists system state to dispatch_state.txt
+        else if (cmd == "save")
+        {
+            system.saveState();
+        }
+        // load restores system state from dispatch_state.txt
+        else if (cmd == "load")
+        {
+            system.loadState();
+        }
+        // help: reprints the command list
+        else if (cmd == "help")
+        {
+            showHelp();
+        }
+        // exit: clean shutdown
+        else if (cmd == "exit")
+        {
+            cout << "Dispatch system shutting down. Goodbye." << endl;
+            break;
+        }
+        // Unknown command
+        else
+        {
+            cout << "Unknown command: \"" << cmd << "\". Type 'help' to see all commands." << endl;
         }
     }
+
+    return 0;
 }
