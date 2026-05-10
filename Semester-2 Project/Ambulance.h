@@ -14,17 +14,17 @@ public:
         this->crewCount = crew;
     }
   // Override getType(), here polymorphism is in action
-    string getType() override 
+    string getType() const override 
     {
         return "Ambulance";
     }
 
     // Override display to also show crew size
-    void display() override 
+    void display() const override 
     {
-        cout << "  Ambulance #" << id << "\n | Name: " << name << "\n | Crew: " << crewCount << "\n | Status: " << (available ? "Available" : "Busy") << endl;
+        cout << "  Ambulance #" << getId() << "\n | Name: " << getName() << "\n | Crew: " << crewCount << "\n | Status: " << (isAvailable() ? "Available" : "Busy") << endl;
     }
-    int getCrewCount() 
+    int getCrewCount() const
     { 
 	      return crewCount; 
     }

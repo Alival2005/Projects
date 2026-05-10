@@ -8,7 +8,7 @@ using namespace std;
 //abstract base class
 class Responder 
 {
-protected:
+private:
     int id;
     string name; // like Ambulance 1, Police 2
     bool available; // true = free to take a job
@@ -21,15 +21,15 @@ public:
         this->available = true; // all responders start as available
     }
     //  Getters
-    int getId() 
+    int getId() const
     { 
         return id;
     }
-    string getName()     
+    string getName() const
     { 
         return name;      
     }
-    bool isAvailable() 
+    bool isAvailable() const
     { 
         return available; 
     }
@@ -46,12 +46,12 @@ public:
         available = true;  
     }
     
-	virtual string getType() = 0;//pure virtual function
+    virtual string getType() const = 0; // pure virtual function
 
     // Virtual display (child classes can override for extra info)
-    virtual void display() 
+    virtual void display() const
     {
-        cout << "  Responder #" << id << "\n | Name: "     << name << "\n | Type: "     << getType() << "\n | Status: "   << (available ? "Available" : "Busy") << endl;
+        cout << "  Responder #" << getId() << "\n | Name: " << getName() << "\n | Type: " << getType() << "\n | Status: " << (isAvailable() ? "Available" : "Busy") << endl;
     }
 
     // Virtual destructor ( prevents memory leak )

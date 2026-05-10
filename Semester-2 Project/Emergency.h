@@ -25,19 +25,19 @@ public:
     }
 
     //  Getters
-    int getId()       
+    int getId() const      
     { 
         return id;       
     }
-    string getType()     
+    string getType() const     
     { 
         return type;     
     }
-    string getPriority() 
+    string getPriority() const 
     { 
         return priority; 
     }
-    string getStatus()   
+    string getStatus() const   
     { 
         return status;   
     }
@@ -49,9 +49,9 @@ public:
     }
 
     // Displaying all details of emergency
-    void display() 
+    void display() const
     {
-        cout << "  Emergency  " << id << "\n | Type: "     << type << "\n | Priority: " << priority << "\n | Status: "   << status << endl;
+        cout << "  Emergency  " << id << "\n | Type: " << type << "\n | Priority: " << priority << "\n | Status: " << status << endl;
     }
 };
 

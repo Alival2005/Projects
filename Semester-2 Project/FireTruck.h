@@ -15,18 +15,18 @@ public:
     }
 
     // Overriding getType()
-    string getType() override 
+    string getType() const override 
     {
         return "FireTruck";
     }
 
     // Override display to also show tank capacity
-    void display() override 
+    void display() const override 
     {
-        cout << "  FireTruck #"   << id << "\n | Name: "       << name << "\n | Water Tank: " << waterCapacity << "L" << "\n | Status: "     << (available ? "Available" : "Busy") << endl;
+        cout << "  FireTruck #" << getId() << "\n | Name: " << getName() << "\n | Water Tank: " << waterCapacity << "L" << "\n | Status: " << (isAvailable() ? "Available" : "Busy") << endl;
     }
 
-    int getWaterCapacity() 
+    int getWaterCapacity() const
     { 
 	    return waterCapacity; 
     }

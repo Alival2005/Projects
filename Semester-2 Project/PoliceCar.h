@@ -16,17 +16,17 @@ public:
     }
 
     // Overriding getType()
-    string getType() override 
+    string getType() const override 
     {
         return "Police";
     }
 
     // Override display to also show unit info
-    void display() override 
+    void display() const override 
     {
-        cout << "  PoliceCar #" << id << "\n | Name: "     << name << "\n | Unit: "     << unit << "\n | Status: "   << (available ? "Available" : "Busy") << endl;
+        cout << "  PoliceCar #" << getId() << "\n | Name: " << getName() << "\n | Unit: " << unit << "\n | Status: " << (isAvailable() ? "Available" : "Busy") << endl;
     }
-    string getUnit() 
+    string getUnit() const
     { 
         return unit; 
     }
