@@ -4,6 +4,7 @@
 #define EMERGENCY_H
 #include <iostream>
 #include <string>
+#include "Constants.h"
 using namespace std;
 
 class Emergency 
@@ -21,7 +22,7 @@ public:
         this->id = id;
         this->type = type;
         this->priority = priority;
-        this->status = "pending"; //every new emergenecy starts as pending
+        this->status = STATUS_PENDING; //every new emergency starts as pending
     }
 
     //  Getters

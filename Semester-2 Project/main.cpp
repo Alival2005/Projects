@@ -11,6 +11,7 @@ void showHelp()
     cout << "  add_responder ambulance <id> <name> <crew_count>" << endl;
     cout << "  add_responder police    <id> <name> <unit>"       << endl;
     cout << "  add_responder firetruck <id> <name> <water_L>"    << endl;
+    cout << "  remove_responder <id>        (remove an available responder)" << endl;
     cout << "  report   <type> <priority>   (type: medical/crime/fire)" << endl;
     cout << "  dispatch                     (sends units to pending emergencies)" << endl;
     cout << "  resolve  <emergency_id>      (marks a job done, frees the unit)" << endl;
@@ -135,6 +136,17 @@ int main()
                 continue;
             }
             system.resolveEmergency(emergencyId);
+        }
+        // remove_responder <id>: removes an available responder from the system
+        else if (cmd == "remove_responder")
+        {
+            int responderId;
+            if (!(ss >> responderId))
+            {
+                cout << "Usage: remove_responder <id>" << endl;
+                continue;
+            }
+            system.removeResponder(responderId);
         }
         // show display all responders and emergencies
         else if (cmd == "show")
